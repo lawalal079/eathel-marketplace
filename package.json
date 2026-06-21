@@ -14,7 +14,6 @@
     "@circle-fin/w3s-pw-web-sdk": "^1.1.11",
     "@phosphor-icons/react": "^2.1.10",
     "@privy-io/react-auth": "^3.29.2",
-    "@tailwindcss/oxide-win32-x64-msvc": "^4.3.0",
     "caniuse-lite": "^1.0.30001797",
     "cookies-next": "^6.1.1",
     "lucide-react": "^1.17.0",
