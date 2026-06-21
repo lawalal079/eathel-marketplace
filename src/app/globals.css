@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    background-color: #0B0B0C;
+    color: #e5e2e1;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+.institutional-frame {
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  margin: 16px;
+  min-height: calc(100vh - 32px);
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .institutional-frame {
+    margin: 24px;
+    min-height: calc(100vh - 48px);
+  }
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(8px);
+}
+
+.active-indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #0066CC;
+  display: inline-block;
+}
+
+@keyframes pulse {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeleton-pulse {
+  background: linear-gradient(90deg, #1A1D20 25%, #22272e 50%, #1A1D20 75%);
+  background-size: 200% 100%;
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.35s ease-out forwards;
+}
+
+/* ─── Dark custom scrollbar — matches app theme ─────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0B0B0C;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1A1D20;
+  border-radius: 999px;
+  border: 1px solid #0B0B0C;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2A2F35;
+}
+
+::-webkit-scrollbar-corner {
+  background: #0B0B0C;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #1A1D20 #0B0B0C;
+}
+
+/* Utility — fully hidden scrollbar (still scrollable) */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
