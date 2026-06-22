@@ -113,7 +113,7 @@ function AppProviderInner({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       try {
-        const cached = localStorage.getItem('aethel_marketplace_agents');
+        const cached = localStorage.getItem('aethel_marketplace_agents_v2');
         if (cached) {
           const parsed = JSON.parse(cached);
           if (Array.isArray(parsed) && parsed.length > 0) {
@@ -145,7 +145,7 @@ function AppProviderInner({ children }: { children: React.ReactNode }) {
 
         if (typeof window !== 'undefined') {
           try {
-            const cached = localStorage.getItem('aethel_marketplace_agents');
+            const cached = localStorage.getItem('aethel_marketplace_agents_v2');
             if (cached) {
               const parsed = JSON.parse(cached);
               if (Array.isArray(parsed)) {
@@ -153,7 +153,7 @@ function AppProviderInner({ children }: { children: React.ReactNode }) {
               }
             }
 
-            const lastScanned = localStorage.getItem('aethel_marketplace_last_scanned_block');
+            const lastScanned = localStorage.getItem('aethel_marketplace_last_scanned_block_v2');
             if (lastScanned) {
               const parsedBlock = BigInt(lastScanned);
               // Ensure lastScannedBlock is valid and in-bounds
@@ -339,8 +339,8 @@ function AppProviderInner({ children }: { children: React.ReactNode }) {
 
         if (typeof window !== 'undefined') {
           try {
-            localStorage.setItem('aethel_marketplace_agents', JSON.stringify(finalAgents));
-            localStorage.setItem('aethel_marketplace_last_scanned_block', latestBlock.toString());
+            localStorage.setItem('aethel_marketplace_agents_v2', JSON.stringify(finalAgents));
+            localStorage.setItem('aethel_marketplace_last_scanned_block_v2', latestBlock.toString());
           } catch (e) {
             console.warn('[context] Failed to save state to localStorage:', e);
           }
