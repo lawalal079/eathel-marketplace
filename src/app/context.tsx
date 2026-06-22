@@ -212,30 +212,38 @@ function AppProviderInner({ children }: { children: React.ReactNode }) {
           verifiedCached = verifiedResults.filter((a): a is Agent => a !== null);
         }
 
-        // 3. Scan for NEW listings in parallel chunks
+        // 3. Scan for NEW listings in sequential batches (3 chunks at a time)
+        // Running all chunks in parallel overwhelms the ARC testnet RPC which
+        // rate-limits concurrent requests, causing some chunks to silently return [].
         const newLogs: any[] = [];
         if (startBlock <= latestBlock) {
-          const chunkPromises = [];
+          const chunks: Array<[bigint, bigint]> = [];
           for (let chunkStart = startBlock; chunkStart <= latestBlock; chunkStart += CHUNK_SIZE) {
             const chunkEnd = chunkStart + CHUNK_SIZE - 1n < latestBlock
               ? chunkStart + CHUNK_SIZE - 1n
               : latestBlock;
-
-            chunkPromises.push(
-              _publicClient.getLogs({
-                address: _PROXY_ADDR,
-                event: _MARKETPLACE_ABI[0] as any,
-                fromBlock: chunkStart,
-                toBlock: chunkEnd,
-              }).catch(err => {
-                console.warn(`[context] Failed to scan range ${chunkStart} - ${chunkEnd}:`, err);
-                return [] as any[];
-              })
-            );
+            chunks.push([chunkStart, chunkEnd]);
           }
 
-          const chunkResults = await Promise.all(chunkPromises);
-          newLogs.push(...chunkResults.flat());
+          // Process 3 chunks at a time to stay within RPC rate limits
+          const BATCH_SIZE = 3;
+          for (let i = 0; i < chunks.length; i += BATCH_SIZE) {
+            const batch = chunks.slice(i, i + BATCH_SIZE);
+            const batchResults = await Promise.all(
+              batch.map(([from, to]) =>
+                _publicClient.getLogs({
+                  address: _PROXY_ADDR,
+                  event: _MARKETPLACE_ABI[0] as any,
+                  fromBlock: from,
+                  toBlock: to,
+                }).catch(err => {
+                  console.warn(`[context] Failed to scan range ${from} - ${to}:`, err);
+                  return [] as any[];
+                })
+              )
+            );
+            newLogs.push(...batchResults.flat());
+          }
         }
 
         if (cancelled) return;
